@@ -1,0 +1,60 @@
+<div *ngIf="jobsDataResponse !== undefined">Total Jobs: {{jobsDataResponse.data.length}}</div>
+<div class="search" *ngIf="jobsDataResponse !== undefined">
+    <input type="text" class="searchTerm" [(ngModel)]="searchkey" (keyup)="KeyUp($event)"
+        placeholder="company name, location, skills, post">
+    <button class="searchButton" (click)="Search()">Search</button>
+</div>
+<div class="row" *ngIf="jobsToDisplay !== undefined">
+    <div class="col">
+        Jobs Found: {{jobsToDisplay.length}}
+    </div>
+    <div class="col text-right"> Sort By:
+        <select [(ngModel)]="sortby" (change)="SortIt()">
+            <option>Relevance</option>
+            <option>Location</option>
+            <option>Experience</option>
+        </select>
+    </div>
+</div>
+
+<div *ngFor="let job of jobsPage" class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <h5 class="card-title">{{job.title | titlecase}}</h5>
+            </div>
+            <div class="col text-right">
+                <p class="card-text"><span>Experience:</span> {{job.experience}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h6 class="card-subtitle mb-2 text-muted">{{job.companyname | titlecase}}</h6>
+            </div>
+            <div class="col text-right">
+                <p class="card-text">{{job.location}}</p>
+            </div>
+        </div>
+
+
+        <p class="card-text"><span>Skills:</span> {{job.skills}}</p>
+        <p class="card-text jd"><span>Job Discription:</span> {{job.jd}}</p>
+        <p class="card-text"><span>Source:</span> {{job.source}}</p>
+        <p class="card-text"><span>Date:</span> {{job.timestamp * 1000 | date: 'medium' : 'india'}}</p>
+        <a [href]="job.applylink" target="_blank" class="btn bt-sm btn-info card-link" style="margin: 10px 0 0 0;">Apply</a>
+    </div>
+</div>
+
+<div class="row " *ngIf="jobsPage">
+    <div class="col pagination">
+        <div>Showing Results <span class="numbers">{{(pageNumber-1)*pageSize}}</span> -
+            <span class="numbers"> {{(pageNumber-1)*pageSize + jobsPage.length}}</span> Of
+            <span class="numbers">{{jobsToDisplay.length}}</span>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-sm btn-info" [disabled]="pageNumber <= 1" (click)="paginate(pageNumber-1)">Previous</button> &nbsp;&nbsp;
+            <button class="btn btn-sm btn-info" [disabled]="(pageNumber-1)*pageSize + jobsPage.length == jobsToDisplay.length"
+                (click)="paginate(pageNumber+1)">Next</button>
+        </div>
+    </div>
+</div>
